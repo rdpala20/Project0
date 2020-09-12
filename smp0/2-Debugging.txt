@@ -1,0 +1,37 @@
+Part Two: Fixing the Bugs
+-------------------------
+
+Understanding the code
+
+  1) Explain why this program uses the exclamation operator with the
+     strcmp() function.
+	It uses the exclamation operator being that it is negating the function of strcmp(). Originally the function is supposed to check if they are equal and returns
+ 	a 0, but because we are using logic and opearators(&&) both parameters in the if statement have to be true. Therefore it is now returning 1. It makes sure that 
+	if the argument counter is greater than 1 and that the first index in argv is "-test", it will run the test.
+
+  2) Explain why the 'LENGTH' macro returns the length of an array.
+     Would it work with a pointer to a dynamically allocated array? (Hint:
+     understand sizeof).
+	The 'LENGTH' macro returns the length of an array by using the sizeof operator. This operator shows the amount of memory that is allocated for a certain variable, thus the first part sizeof(s) returns the size of the array
+	while the sizeof(*s) returns the size for the first element in given array, thus when they are divided it shows the amount of elements in that array.It would not work with a dynamically allocated array being that it is able
+	to modify its size various times.
+
+Bug hunting
+
+  3) Explain and fix the logical flow bug within the switch statement.
+     (What happens when the -h option is used?)
+	The case for the help option does not have a break in it, therefore it keeps on going to the other if statements. By adding the break it exits the case when it is satisfied.
+	"return EXIT_FAILURE" would sufice as the break of this case statement.
+
+  4) Explain and fix the argument parsing error. (Why is entrycount never
+     zero?)
+	It is never zero because the first argument being passed is ./main therefore it is not taking that one into account. This is fixed by incrmenting argv at the beginning of the while loop,
+	initializing the argument to the first index, in this case cat. Also argc, the argument counter is decremented by one in the if statement to also exclude ./main from our desired output.
+
+  5) Fix print_result() to print results correctly and in the same order
+     as the words were specified on the command line.  Explain your solution.
+                    
+	What I did was initialize a variable, i,  to equal 0. Then used a for loop that does the same as the function above it, checks if entry_count is greater than i.
+	If it is then it will print the designated entry index that contains both the word and counter. Being that it is accessed using array notation for the index and then
+	uses point notation to specify the member, of first the word and then the counter. After this process it increments i and keeps on going until the for loop is not true.
+	

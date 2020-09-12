@@ -1,0 +1,92 @@
+Pointers in C
+-------------
+
+1) Consider the following C program.
+#include <string.h>
+int main(int argc, char *argv[])
+{
+  char *temp;
+  strcpy(temp, argv[0]);
+  return 0;
+}
+
+Why is the above code incorrect (i.e., likely to crash)?
+The above code is incorrect because it is not specifying the amoung of characters that *temp can hold, variable isnt initialized. 
+Therefore, the index 0 from the array of strings, argv, can have multiple characters not just one and would make it crash.
+
+2) Consider the following C program.
+#include <string.h>
+int main(int argc, char *argv[])
+{
+  char temp[9];
+  strcpy(temp, argv[0]);
+  return 0;
+}
+
+A buffer overflow occurs when the program name is 9 characters long
+(e.g., "12345.exe"). Why?
+The buffer overflow occurs becasue the string can only hold 9 characters, and if the name itself is 9 characters then it is not taking into account the null, /0, that is at the end.
+If the program was one less character or you would make it 10 characters with the same name then it would work.
+
+3) Consider the following C program.
+#include <string.h>
+int main(int argc, char *argv[])
+{
+  char *buffer = "Hello";
+  strcpy(buffer, "World");
+  return 0;
+}
+
+Why does this program crash?
+The program crashes because buffer is already designated a string and it is trying to overwrite the string with strcpy().It is trying to modify read only memory.
+The way it would work would be to designate certain space for it like char buffer[6], set it all to null using memset(buffer,'/0',sizeof(buffer)) and then using the strcpy function.
+
+
+4) Consider the following C snippet.
+void myfunc()
+{
+  char b[100];
+  char *buffer = &b[0];
+  strcpy(buffer, "World");
+}
+
+Is this correct?  What's a simpler expression for &b[0]?
+Yes it is correct, being that it is an array of characters called b, then buffer pointer is initialized to the first address, thus when strcpy() sets "World" to buffer.
+Another way of writing &b[0] would be using b because they are both accesing the first part of the address.
+
+5) Consider the following C program.
+#include <stdio.h>
+int main(int argc, char* argv[])
+{
+  printf("%s %s %s\n", *argv, (*(argv+1)) + 2, *(argv+2));
+  return 0;
+}
+
+If this code is executed using the following line, what will be the output?
+> program1 -n5 abc
+*argv => program1
+It is a pointer to the first argument string.
+(*(argv+1))+2 = argv+1=>-n5; (*-n5)+2 => 5
+First it is incrementing the argument from program1 to -n5 and then in that string it is then adding 2 to the characters, therefore it obtains the 3rd index (2nd element) of 5.
+*(argv+2) =>abc 
+It first obtains the last argument by adding 2, then obtains the the full string of what the last argument is.
+Therefore, the output of the program would be program1 5 abc.
+
+6) Consider the following C program.
+#include <stdio.h>
+#include <string.h>
+char *myfunc(char **argv)
+{
+  char buffer[100];
+  strcpy(buffer, "hello");
+  return buffer;
+}
+int main(int argc, char *argv[])
+{
+  char *s = myfunc(argv);
+  printf("%s\n", s);
+}
+
+What's wrong with this?
+It is returning the address of the local variable, buffer, and it shouldnt return the local variable address of the pointer because once the execution ends it would lose the placement of memory that it had. 
+The memory is in the scope of the function but by using malloc we can allocate that memory in a heap where it would be accessable outside of that specific scope.
